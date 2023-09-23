@@ -1,5 +1,10 @@
 import subprocess
 
+class ProcessStatus:
+    RUNNING = "running"
+    INACTIVE = "inactive"
+    OTHER = "other"
+
 class SystemMonitoring:
     @staticmethod
     def get_system_uptime():
@@ -8,21 +13,25 @@ class SystemMonitoring:
             return uptime.strip()
         except subprocess.CalledProcessError as e:
             return f"Error: {e}"
-
+        
     @staticmethod
-    def get_cpu_usage():
-        try:
-            top_output = subprocess.check_output(["top", "-bn1"], universal_newlines=True)
-            cpu_usage = [line for line in top_output.splitlines() if line.startswith("%Cpu(s):")]
-            return cpu_usage[0]
-        except subprocess.CalledProcessError as e:
-            return f"Error: {e}"
-
+    def get_status_sonarr():
+        return SystemMonitoring.get_process_status("sonarr")
+    
     @staticmethod
-    def get_memory_usage():
+    def get_process_status(process_name):
         try:
-            free_output = subprocess.check_output(["free", "-m"], universal_newlines=True)
-            memory_usage = [line for line in free_output.splitlines() if line.startswith("Mem:")]
-            return memory_usage[0]
+            cmd = f"sudo systemctl status {process_name}"
+            output = subprocess.check_output(cmd, shell=True, universal_newlines=True)
+
+            # Parse the output to determine the status
+            if "Active: active (running)" in output:
+                return ProcessStatus.RUNNING
+            elif "Active: inactive" in output:
+                return ProcessStatus.INACTIVE
+            else:
+                return ProcessStatus.OTHER
+
         except subprocess.CalledProcessError as e:
-            return f"Error: {e}"
+            print(f"Error: {e}")
+            return ProcessStatus.OTHER

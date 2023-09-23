@@ -725,9 +725,9 @@ class Searcharr(object):
 
     def cmd_system(self, update, context):
         logger.debug(f"Received system cmd from [{update.message.from_user.username}]")
-        uptime = SystemMonitoring.get_system_uptime()
-        logger.info(f"Uptime: {uptime}")
-        update.message.reply_text(f"Uptime: {uptime}")
+        sonarr = SystemMonitoring.get_status_sonarr()
+        logger.info(f"Sonarr status: {sonarr}")
+        update.message.reply_text(f"Sonarr status: {sonarr}")
 
 
     def callback(self, update, context):
