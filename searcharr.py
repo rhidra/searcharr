@@ -1777,7 +1777,7 @@ class Searcharr(object):
             updater.dispatcher.add_handler(CommandHandler(c, self.cmd_users))
         
         # Add dispatcher for server system monitoring
-        updater.dispatcher.add_handler(CommandHandler("/system", self.cmd_system))
+        updater.dispatcher.add_handler(CommandHandler("system", self.cmd_system))
         
         updater.dispatcher.add_handler(CallbackQueryHandler(self.callback))
         if not self.DEV_MODE:
