@@ -23,6 +23,7 @@ import radarr
 import sonarr
 import readarr
 import settings
+from system_monitoring import SystemMonitoring
 
 __version__ = "3.2.2"
 
@@ -721,6 +722,13 @@ class Searcharr(object):
                 text=reply_message,
                 reply_markup=reply_markup,
             )
+
+    def cmd_system(self, update, context):
+        logger.debug(f"Received system cmd from [{update.message.from_user.username}]")
+        uptime = SystemMonitoring.get_system_uptime()
+        logger.info(f"Uptime: {uptime}")
+        update.message.reply_text(f"Uptime: {uptime}")
+
 
     def callback(self, update, context):
         query = update.callback_query
@@ -1767,6 +1775,10 @@ class Searcharr(object):
         for c in settings.searcharr_users_command_aliases:
             logger.debug(f"Registering [/{c}] as a users command")
             updater.dispatcher.add_handler(CommandHandler(c, self.cmd_users))
+        
+        # Add dispatcher for server system monitoring
+        updater.dispatcher.add_handler(CommandHandler("/system", self.cmd_system))
+        
         updater.dispatcher.add_handler(CallbackQueryHandler(self.callback))
         if not self.DEV_MODE:
             updater.dispatcher.add_error_handler(self.handle_error)
