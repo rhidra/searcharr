@@ -2,6 +2,56 @@ import subprocess
 
 from log import set_up_logger
 
+PROCESSES = [{
+        "id": "sonarr",
+        "systemctl": "sonarr",
+        "display": "Sonarr"
+    },{
+        "id": "radarr",
+        "systemctl": "radarr",
+        "display": "Radarr"
+    }, {
+        "id": "prowlarr",
+        "systemctl": "prowlarr",
+        "display": "Prowlarr"
+    }, {
+        "id": "bazarr",
+        "systemctl": "bazarr",
+        "display": "Bazarr"
+    }, {
+        "id": "plex",
+        "systemctl": "plexmediaserver",
+        "display": "Plex"
+    }, {
+        "id": "jellyfin",
+        "systemctl": "jellyfin",
+        "display": "Jellyfin"
+    }, {
+        "id": "ombi",
+        "systemctl": "ombi",
+        "display": "Ombi"
+    }, {
+        "id": "searcharr",
+        "systemctl": "searcharr",
+        "display": "Searcharr"
+    }, {
+        "id": "nzbget",
+        "systemctl": "nzbget",
+        "display": "NZBGet"
+    }, {
+        "id": "transmission",
+        "systemctl": "transmission-deamon",
+        "display": "Transmission"
+    }, {
+        "id": "openvpn",
+        "systemctl": "openvpn",
+        "display": "OpenVPN"
+    }, {
+        "id": "readarr",
+        "systemctl": "readarr",
+        "display": "Readarr"
+    }]
+
 class ProcessStatus:
     RUNNING = "running"
     INACTIVE = "inactive"
@@ -17,13 +67,14 @@ class SystemMonitoring:
             return uptime.strip()
         except subprocess.CalledProcessError as e:
             return f"Error: {e}"
-        
-    def get_status_sonarr(self):
-        return self.get_process_status("sonarr")
-        
-    def get_status_radarr(self):
-        return self.get_process_status("radarr")
     
+    def generate_processs_status_report(self):
+        report = ''
+        for p in PROCESSES:
+            status = self.get_process_status(p.systemctl)
+            report += f"{p.display}: {status}\n"
+        return report
+
     # Before adding a new process to check, add the command to visudo, like:
     # rhidra ALL=(ALL) NOPASSWD: /bin/systemctl status sonarr
     def get_process_status(self, process_name):

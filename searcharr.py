@@ -728,11 +728,8 @@ class Searcharr(object):
 
     def cmd_system(self, update, context):
         logger.debug(f"Received system cmd from [{update.message.from_user.username}]")
-        sonarr = self.system.get_status_sonarr()
-        logger.info(f"Sonarr status: {sonarr}")
-        radarr = self.system.get_status_radarr()
-        logger.info(f"Radar status: {radarr}")
-        update.message.reply_text(f"Sonarr status: {sonarr}\nRadarr status: {radarr}")
+        report = self.system.generate_processs_status_report()
+        update.message.reply_text(report)
 
 
     def callback(self, update, context):
