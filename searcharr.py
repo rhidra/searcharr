@@ -728,6 +728,8 @@ class Searcharr(object):
 
     def cmd_system(self, update, context):
         logger.debug(f"Received system cmd from [{update.message.from_user.username}]")
+        logger.info(update)
+        logger.info(context)
         report = self.system.generate_processs_status_report()
         update.message.reply_text(report)
 
