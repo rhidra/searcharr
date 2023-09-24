@@ -40,7 +40,7 @@ PROCESSES = [{
         "display": "NZBGet"
     }, {
         "id": "transmission",
-        "systemctl": "transmission-deamon",
+        "systemctl": "transmission-daemon.service",
         "display": "Transmission"
     }, {
         "id": "openvpn",
@@ -52,10 +52,20 @@ PROCESSES = [{
         "display": "Readarr"
     }]
 
+
 class ProcessStatus:
     RUNNING = "running"
     INACTIVE = "inactive"
     OTHER = "other"
+
+    def map2emoji(status):
+        emoji_mapping = {
+            ProcessStatus.RUNNING: "✅",
+            ProcessStatus.INACTIVE: "❌",
+            ProcessStatus.OTHER: "❓",
+        }
+        return emoji_mapping.get(status, "❓")
+
 
 class SystemMonitoring:
     def __init__(self, verbose=False, console_logging=False):
@@ -72,8 +82,9 @@ class SystemMonitoring:
         report = ''
         for p in PROCESSES:
             status = self.get_process_status(p['systemctl'])
-            report += f"{p['display']}: {status}\n"
+            report += f"{p['display']}: {ProcessStatus.map2emoji(status)}\n"
         return report
+
 
     # Before adding a new process to check, add the command to visudo, like:
     # rhidra ALL=(ALL) NOPASSWD: /bin/systemctl status sonarr
