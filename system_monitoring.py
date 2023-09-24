@@ -85,6 +85,15 @@ class SystemMonitoring:
             report += f"{ProcessStatus.map2emoji(status)} {p['display']}\n"
         return report
 
+    def run_start_script(self):
+        try:
+            cmd = ['sh', '/home/rhidra/start.sh']
+            self.logger.info(f"Running: {' '.join(cmd)}")
+            subprocess.check_output(cmd, universal_newlines=True)
+            return True
+        except subprocess.CalledProcessError as e:
+            self.logger.error(f"Error: {e}")
+            return False
 
     # Before adding a new process to check, add the command to visudo, like:
     # rhidra ALL=(ALL) NOPASSWD: /bin/systemctl status sonarr
@@ -103,5 +112,5 @@ class SystemMonitoring:
                 return ProcessStatus.OTHER
 
         except subprocess.CalledProcessError as e:
-            print(f"Error: {e}")
+            self.logger.error(f"Error: {e}")
             return ProcessStatus.OTHER

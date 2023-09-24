@@ -728,10 +728,19 @@ class Searcharr(object):
 
     def cmd_system(self, update, context):
         logger.debug(f"Received system cmd from [{update.message.from_user.username}]")
-        logger.info(update)
-        logger.info(context)
-        report = self.system.generate_processs_status_report()
-        update.message.reply_text(report)
+        cmd = self._strip_entities(update.message)
+        
+        # Command empty = status report
+        if not len(cmd):
+            update.message.reply_text(self.system.generate_processs_status_report())
+            return
+        
+        cmd = cmd.split()
+        if len(cmd) == 1 and cmd[0] == "start":
+            if self.system.run_start_script():
+                update.message.reply_text('🟢 Successfully ran start script !')
+            else:
+                update.message.reply_text('🔴 An unknown error happened when running the start script !')
 
 
     def callback(self, update, context):
