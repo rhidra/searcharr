@@ -730,7 +730,9 @@ class Searcharr(object):
         logger.debug(f"Received system cmd from [{update.message.from_user.username}]")
         sonarr = self.system.get_status_sonarr()
         logger.info(f"Sonarr status: {sonarr}")
-        update.message.reply_text(f"Sonarr status: {sonarr}")
+        radarr = self.system.get_status_radarr()
+        logger.info(f"Radar status: {radarr}")
+        update.message.reply_text(f"Sonarr status: {sonarr}\nRadarr status: {radarr}")
 
 
     def callback(self, update, context):
