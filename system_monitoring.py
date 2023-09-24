@@ -28,7 +28,7 @@ class SystemMonitoring:
     # rhidra ALL=(ALL) NOPASSWD: /bin/systemctl status sonarr
     def get_process_status(self, process_name):
         try:
-            cmd = ['sudo', 'systemctl', 'status', process_name]
+            cmd = ['systemctl', 'status', process_name]
             self.logger.info(f"Running: {' '.join(cmd)}")
             output = subprocess.check_output(cmd, universal_newlines=True)
 
