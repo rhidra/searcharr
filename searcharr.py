@@ -61,7 +61,7 @@ def parse_args():
 
 
 class Searcharr(object):
-    def __init__(self, token):
+    def __init__(self, token, verbose=False, console_logging=False):
         self.DEV_MODE = True if args.dev_mode else False
         self.token = token
         logger.info(f"Searcharr v{__version__} - Logging started!")
@@ -412,6 +412,9 @@ class Searcharr(object):
             logger.warning(
                 'No searcharr_users_command_aliases setting found. Please add searcharr_users_command_aliases to settings.py (e.g. searcharr_users_command_aliases=["users"]. Defaulting to ["users"].'
             )
+        
+        # Define system monitoring object
+        self.system = SystemMonitoring(verbose, console_logging)
 
     def cmd_start(self, update, context):
         logger.debug(f"Received start cmd from [{update.message.from_user.username}]")
@@ -725,7 +728,7 @@ class Searcharr(object):
 
     def cmd_system(self, update, context):
         logger.debug(f"Received system cmd from [{update.message.from_user.username}]")
-        sonarr = SystemMonitoring.get_status_sonarr()
+        sonarr = self.system.get_status_sonarr()
         logger.info(f"Sonarr status: {sonarr}")
         update.message.reply_text(f"Sonarr status: {sonarr}")
 
@@ -2127,5 +2130,5 @@ class Searcharr(object):
 if __name__ == "__main__":
     args = parse_args()
     logger = set_up_logger("searcharr", args.verbose, args.console_logging)
-    tgr = Searcharr(settings.tgram_token)
+    tgr = Searcharr(settings.tgram_token, args.verbose, args.console_logging)
     tgr.run()
