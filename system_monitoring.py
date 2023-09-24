@@ -60,11 +60,11 @@ class ProcessStatus:
 
     def map2emoji(status):
         emoji_mapping = {
-            ProcessStatus.RUNNING: "✅",
-            ProcessStatus.INACTIVE: "❌",
-            ProcessStatus.OTHER: "❓",
+            ProcessStatus.RUNNING: "🟢",
+            ProcessStatus.INACTIVE: "⚫",
+            ProcessStatus.OTHER: "🔴",
         }
-        return emoji_mapping.get(status, "❓")
+        return emoji_mapping.get(status, "🔴")
 
 
 class SystemMonitoring:
@@ -82,7 +82,7 @@ class SystemMonitoring:
         report = ''
         for p in PROCESSES:
             status = self.get_process_status(p['systemctl'])
-            report += f"{p['display']}: {ProcessStatus.map2emoji(status)}\n"
+            report += f"{ProcessStatus.map2emoji(status)} {p['display']}\n"
         return report
 
 
@@ -93,7 +93,6 @@ class SystemMonitoring:
             cmd = ['systemctl', 'status', process_name]
             self.logger.info(f"Running: {' '.join(cmd)}")
             output = subprocess.check_output(cmd, universal_newlines=True)
-            self.logger.info(output)
 
             # Parse the output to determine the status
             if "Active: active (running)" in output:
