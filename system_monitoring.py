@@ -93,6 +93,7 @@ class SystemMonitoring:
             cmd = ['systemctl', 'status', process_name]
             self.logger.info(f"Running: {' '.join(cmd)}")
             output = subprocess.check_output(cmd, universal_newlines=True)
+            self.logger.info(output)
 
             # Parse the output to determine the status
             if "Active: active (running)" in output:
