@@ -71,8 +71,8 @@ class SystemMonitoring:
     def generate_processs_status_report(self):
         report = ''
         for p in PROCESSES:
-            status = self.get_process_status(p.systemctl)
-            report += f"{p.display}: {status}\n"
+            status = self.get_process_status(p['systemctl'])
+            report += f"{p['display']}: {status}\n"
         return report
 
     # Before adding a new process to check, add the command to visudo, like:
