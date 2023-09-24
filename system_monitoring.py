@@ -44,7 +44,7 @@ PROCESSES = [{
         "display": "Transmission"
     }, {
         "id": "openvpn",
-        "systemctl": "openvpn.service",
+        "systemctl": "openvpn@cdg-001.service",
         "display": "OpenVPN"
     }, {
         "id": "readarr",
