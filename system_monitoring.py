@@ -20,12 +20,17 @@ class SystemMonitoring:
         
     def get_status_sonarr(self):
         return self.get_process_status("sonarr")
+        
+    def get_status_radarr(self):
+        return self.get_process_status("radarr")
     
+    # Before adding a new process to check, add the command to visudo, like:
+    # rhidra ALL=(ALL) NOPASSWD: /bin/systemctl status sonarr
     def get_process_status(self, process_name):
         try:
             cmd = f"sudo systemctl status {process_name}"
             self.logger.info(f"Running: {cmd}")
-            output = subprocess.check_output(cmd, shell=True, universal_newlines=True)
+            output = subprocess.check_output(cmd, universal_newlines=True)
 
             # Parse the output to determine the status
             if "Active: active (running)" in output:
