@@ -152,8 +152,8 @@ class SystemMonitoring:
         try:
             cmd = ['sh', '/home/rhidra/start.sh']
             self.logger.info(f"Running: {' '.join(cmd)}")
-            subprocess.check_output(cmd, universal_newlines=True)
-            self.logger.info("Done running the start script")
+            subprocess.Popen(cmd, universal_newlines=True)
+            self.logger.info("Launched the start script")
             return True
         except subprocess.CalledProcessError as e:
             self.logger.error(f"Error: {e}")
